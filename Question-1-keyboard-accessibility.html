@@ -210,16 +210,25 @@ article p {
       <h1 class="logo">The Funion</h1>
       
       <!-- Maybe this could be improved with aria-activedescendant later? -->
-      <nav class="menu">
-        <a href="#">Home</a>
-        <a href="#">Politics</a>
-        <a href="#">Business</a>
-        <!--removed tab index to enable keyboard navigation that skips on the business button-->
-        <a href="#">Entertainment</a>
-        <a href="#">Sports</a>
-        <a href="#" class="btn-search pull-right"><img src="https://raw.githubusercontent.com/udacity/ud891/2de2a0688c68809a3b453db3a24b1a59e8401459/lesson2-focus/02-dom-order/images/search.svg" alt="Search" />Search</a> 
-
-      </nav>
+      <nav class="menu" role="navigation" id="menu" aria-activedescendant="">
+        <a href="#" id="link-home">Home</a>
+        <a href="#" id="link-politics">Politics</a>
+        <a href="#" id="link-business">Business</a>
+        <a href="#" id="link-entertainment">Entertainment</a>
+        <a href="#" id="link-sports">Sports</a>
+        <a href="#" class="btn-search pull-right" id="link-search"><img src="https://raw.githubusercontent.com/udacity/ud891/2de2a0688c68809a3b453db3a24b1a59e8401459/lesson2-focus/02-dom-order/images/search.svg" alt="Search" />Search</a>
+    </nav>
+    
+    <script>
+        const menuLinks = document.querySelectorAll('.menu a');
+        const menu = document.getElementById('menu');
+    
+        menuLinks.forEach(link => {
+            link.addEventListener('focus', () => {
+                menu.setAttribute('aria-activedescendant', link.id);
+            });
+        });
+    </script>
     </div>
   </header>
   <!--
