@@ -35,14 +35,18 @@
           <label>Biography</label><textarea id="biography" name="biography" type="text"></textarea>
           <span>Include examples on your skills in JavaScript.</span>
         </div>
-        
-          <div>Gender</div>
-          <div class="control">
-            <input id="gender_male" name="gender" type="radio" value="male" /><label>Male</label>
+        <!--Associated related radio buttons with fieldset-->
+        <fieldset>
+        <legend>Gender</legend>
+          <div>
+            <input id="gender_male" name="gender" type="radio" value="txt" checked >
+            <label for="gender_male">Male</label>
           </div>
-          <div class="control">
-            <input id="gender_female" name="gender" type="radio" value="female" /><label>Female</label>
+          <div>
+            <input id="gender_female" name="gender" type="radio" value="txt" checked >
+            <label for="gender_male">Female</label>
           </div>
+        </fieldset>
         
         <div class="control">
           <input id="accept_agbs" name="accept_agbs" type="checkbox" value="1" /><label>I accept the terms and conditions</label>
