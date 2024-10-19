@@ -23,11 +23,17 @@
     
     fieldset ul {
       margin: 0;
-    }</style>
+    }
+     /* CSS to highlight error fields */
+     .error-highlight {
+              border: 2px solid red; /* Highlight with a red border */
+          }
+    </style>
     </head>
     <body>
         <h1>Feedback form</h1>
-        <form id="userForm">
+      
+      <form id="userForm">
           <!-- Full name input with accessible label -->
           <div class="control">
               <label for="full_name">
@@ -86,60 +92,94 @@
               };
       
               validateInput = function validateInput(input, message) {
-                  var $elementToDescribe, $error, $errorContainer, $fieldset, $input, $referencedElement, value;
-                  $input = $('[name="' + input + '"]');
+                  var $input = $('[name="' + input + '"]');
+                  var $errorContainer = $('fieldset.errors ul');
       
-                  if ((value = $.urlParam(input)) === null) {
-                      if ($('fieldset.errors').length === 0) {
-                          $('form').prepend('<fieldset class="errors"><legend>Errors</legend><ul></ul></fieldset>');
-                      }
+                  // Highlight the input field with an error
+                  $input.addClass('error-highlight');
       
-                      $referencedElement = null;
-                      $elementToDescribe = null;
-                      $errorContainer = $('fieldset.errors ul');
-      
-                      if ($input.is(':radio')) {
-                          $fieldset = $input.closest('fieldset');
-                          $elementToDescribe = $fieldset;
-                          $referencedElement = $input.filter(':first');
-                      } else {
-                          $elementToDescribe = $input;
-                          $referencedElement = $input;
-                      }
-      
-                      // Changed to list item for better structure
-                      $error = $('<li>' + message + '</li>'); 
-                      $errorContainer.append($error);
-                      $referencedElement.attr('aria-invalid', 'true'); // Mark the input as invalid
-                      $referencedElement.focus(); // Focus on the first invalid input
-                      $('#errorContainer').text(message).removeClass('visually-hidden'); // Show error message in the error container
-                      $('#errorContainer').attr('aria-live', 'assertive'); // Notify screen readers of the error
-                  } else {
-                      if ($input.is(':checkbox')) {
-                          $input.attr('checked', true);
-                      }
-      
-                      if ($input.is(':radio')) {
-                          return $input.filter('[value="' + value + '"]').attr('checked', true);
-                      } else {
-                          return $input.val(value);
-                      }
-                  }
+                  // Create and append error message
+                  var $error = $('<li>' + message + '</li>');
+                  $errorContainer.append($error);
+                  $input.attr('aria-invalid', 'true'); // Mark the input as invalid
+                  $input.focus(); // Focus on the first invalid input
+                  $('#errorContainer').text(message).removeClass('visually-hidden'); // Show error message in the error container
+                  $('#errorContainer').attr('aria-live', 'assertive'); // Notify screen readers of the error
               };
+      
+              // Function to clear errors
+              function clearErrors() {
+                  $('input, textarea').removeClass('error-highlight'); // Remove highlight from all inputs
+                  $('#errorContainer').addClass('visually-hidden'); // Hide error container
+                  $('fieldset.errors').remove(); // Remove error fieldset
+              }
       
               $(document).ready(function () {
                   // Validate inputs when the form is submitted
-                  if ($.urlParam('validate')) {
-                      validateInput('name', 'Please enter your name!');
-                      validateInput('biography', 'Please tell us something about your history!');
-                      validateInput('gender', 'Please tell us your gender!');
-                      validateInput('accept_agbs', 'You must accept our terms and conditions!');
+                  $('#userForm').on('submit', function (event) {
+                      event.preventDefault(); // Prevent form submission for validation
+                      clearErrors(); // Clear previous errors
+                      var isValid = true;
+      
+                      // Check full name input
+                      if ($('#full_name').val().trim() === '') {
+                          validateInput('name', 'Please enter your name!');
+                          isValid = false;
+                      }
+      
+                      // Check biography input
+                      if ($('#biography').val().trim () === '') {
+                          validateInput('biography', 'Please tell us something about your history!');
+                          isValid = false;
+                      }
+      
+                      // Check gender selection
+                      if (!$('input[name="gender"]').is(':checked')) {
+                          validateInput('gender', 'Please tell us your gender!');
+                          isValid = false;
+                      }
+      
+                      // Check terms and conditions checkbox
+                      if (!$('#accept_agbs').is(':checked')) {
+                          validateInput('accept_agbs', 'You must accept our terms and conditions!');
+                          isValid = false;
+                      }
       
                       // Show success alert only when all inputs are valid
-                      if ($('.error').length === 0) {
+                      if (isValid) {
                           alert('All inputs are valid.'); 
                       }
-                  }
+                  });
+      
+                  // Clear errors when input values change
+                  $('input, textarea').on('input', function () {
+                      var $input = $(this);
+                      var inputName = $input.attr('name');
+      
+                      // Check if the input is valid
+                      switch (inputName) {
+                          case 'name':
+                              if ($input.val().trim() !== '') {
+                                  clearErrors();
+                              }
+                              break;
+                          case 'biography':
+                              if ($input.val().trim() !== '') {
+                                  clearErrors();
+                              }
+                              break;
+                          case 'gender':
+                              if ($('input[name="gender"]').is(':checked')) {
+                                  clearErrors();
+                              }
+                              break;
+                          case 'accept_agbs':
+                              if ($('#accept_agbs').is(':checked')) {
+                                  clearErrors();
+                              }
+                              break;
+                      }
+                  });
               });
           }).call(void 0);
       </script>
