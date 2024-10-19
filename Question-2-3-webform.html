@@ -59,16 +59,18 @@
       
           <!-- Gender selection with fieldset and legend -->
           <fieldset>
-              <legend>Gender</legend>
-              <div class="control">
-                  <input id="gender_male" name="gender" type="radio" value="male">
-                  <label for="gender_male">Male</label>
-              </div>
-              <div class="control">
-                  <input id="gender_female" name="gender" type="radio" value="female">
-                  <label for="gender_female">Female</label>
-              </div>
-          </fieldset>
+            <legend>Gender</legend>
+            <div class="control">
+                <input id="gender_male" name="gender" type="radio" value="male">
+                <label for="gender_male">Male</label>
+            </div>
+            <div class="control">
+                <input id="gender_female" name="gender" type="radio" value="female">
+                <label for="gender_female">Female</label>
+            </div>
+            <div id="gender_error" class="error-message visually-hidden"></div> 
+            <!-- Error message container for gender -->
+        </fieldset>
       
           <!-- Terms and conditions checkbox -->
           <div class="control">
@@ -136,7 +138,9 @@
 
         // Check gender selection (required)
         if (!$('input[name="gender"]').is(':checked')) {
-            validateInput('gender', 'Please tell us your gender!');
+            // Highlight the gender radio buttons
+            $('input[name="gender"]').closest('.control').addClass('error-highlight'); // Highlight the fieldset
+            $('#gender_error').text('Please tell us your gender!').removeClass('visually-hidden'); // Show error message
             isValid = false;
         }
 
