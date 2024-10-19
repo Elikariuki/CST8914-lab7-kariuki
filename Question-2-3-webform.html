@@ -129,11 +129,13 @@
         event.preventDefault(); // Prevent form submission for validation
         clearErrors(); // Clear previous errors
         var isValid = true;
+        var firstErrorField = null; // Variable to track the first error field
 
         // Check full name input
         if ($('#full_name').val().trim() === '') {
             validateInput('name', 'Please enter your name!');
             isValid = false;
+            if (!firstErrorField) firstErrorField = $('#full_name'); // Set first error field
         }
 
         // Check gender selection (required)
@@ -142,6 +144,7 @@
             $('input[name="gender"]').closest('.control').addClass('error-highlight'); // Highlight the fieldset
             $('#gender_error').text('Please tell us your gender!').removeClass('visually-hidden'); // Show error message
             isValid = false;
+            if (!firstErrorField) firstErrorField = $('input[name="gender"]').first(); // Set first error field
         }
 
         // Check terms and conditions checkbox
@@ -149,11 +152,14 @@
             $('#accept_agbs').addClass('terms-error-highlight'); // Highlight the checkbox
             validateInput('accept_agbs', 'You must accept our terms and conditions!'); // Show error message
             isValid = false;
+            if (!firstErrorField) firstErrorField = $('#accept_agbs'); // Set first error field
         }
 
         // Show success alert only when all inputs are valid
         if (isValid) {
             alert('All inputs are valid.'); 
+        } else if (firstErrorField) {
+            firstErrorField.focus(); // Move focus to the first error field
         }
     });
 
