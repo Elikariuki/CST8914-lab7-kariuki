@@ -32,10 +32,7 @@
               color: red; /* Style for error messages */
               font-size: 0.9em; /* Slightly smaller font for error messages */
           }
-          .terms-error-highlight {
-    color: red; /* Change text color to red for error message */
-    font-weight: bold; /* Make the error message bold */
-}
+
     </style>
     </head>
     <body>
@@ -125,74 +122,62 @@
               }
       
               $(document).ready(function () {
-                  // Validate inputs when the form is submitted
-                  $('#userForm').on('submit', function ( event) {
-                      event.preventDefault(); // Prevent form submission for validation
-                      clearErrors(); // Clear previous errors
-                      var isValid = true;
-      
-                      // Check full name input
-                      if ($('#full_name').val().trim() === '') {
-                          validateInput('name', 'Please enter your name!');
-                          isValid = false;
-                      }
-      
-                      // Check biography input
-                      if ($('#biography').val().trim() === '') {
-                          $('#biography_error').text('Please tell us something about your history!').removeClass('visually-hidden');
-                          $('#biography').addClass('error-highlight');
-                          isValid = false;
-                      }
-      
-                      // Check gender selection
-                      if (!$('input[name="gender"]').is(':checked')) {
-                          validateInput('gender', 'Please tell us your gender!');
-                          isValid = false;
-                      }
-      
-                      // Check terms and conditions checkbox
-                      if (!$('#accept_agbs').is(':checked')) {
-                          validateInput('accept_agbs', 'You must accept our terms and conditions!');
-                          isValid = false;
-                      }
-      
-                      // Show success alert only when all inputs are valid
-                      if (isValid) {
-                          alert('All inputs are valid.'); 
-                      }
-                  });
-      
-                  // Clear errors when input values change
-                  $('input, textarea').on('input', function () {
-                      var $input = $(this);
-                      var inputName = $input.attr('name');
-      
-                      // Check if the input is valid
-                      switch (inputName) {
-                          case 'name':
-                              if ($input.val().trim() !== '') {
-                                  clearErrors();
-                              }
-                              break;
-                          case 'biography':
-                              if ($input.val().trim() !== '') {
-                                  clearErrors();
-                                  $('#biography_error').addClass('visually-hidden');
-                              }
-                              break;
-                          case 'gender':
-                              if ($('input[name="gender"]').is(':checked')) {
-                                  clearErrors();
-                              }
-                              break;
-                          case 'accept_agbs':
-                              if ($('#accept_agbs').is(':checked')) {
-                                  clearErrors();
-                              }
-                              break;
-                      }
-                  });
-              });
+    // Validate inputs when the form is submitted
+    $('#userForm').on('submit', function (event) {
+        event.preventDefault(); // Prevent form submission for validation
+        clearErrors(); // Clear previous errors
+        var isValid = true;
+
+        // Check full name input
+        if ($('#full_name').val().trim() === '') {
+            validateInput('name', 'Please enter your name!');
+            isValid = false;
+        }
+
+        // Check gender selection (required)
+        if (!$('input[name="gender"]').is(':checked')) {
+            validateInput('gender', 'Please tell us your gender!');
+            isValid = false;
+        }
+
+        // Check terms and conditions checkbox
+        if (!$('#accept_agbs').is(':checked')) {
+            $('#accept_agbs').addClass('terms-error-highlight'); // Highlight the checkbox
+            validateInput('accept_agbs', 'You must accept our terms and conditions!'); // Show error message
+            isValid = false;
+        }
+
+        // Show success alert only when all inputs are valid
+        if (isValid) {
+            alert('All inputs are valid.'); 
+        }
+    });
+
+    // Clear errors when input values change
+    $('input, textarea').on('input', function () {
+        var $input = $(this);
+        var inputName = $input.attr('name');
+
+        // Check if the input is valid
+        switch (inputName) {
+            case 'name':
+                if ($input.val().trim() !== '') {
+                    clearErrors();
+                }
+                break;
+            case 'gender':
+                if ($('input[name="gender"]').is(':checked')) {
+                    clearErrors();
+                }
+                break;
+            case 'accept_agbs':
+                if ($input.is(':checked')) {
+                    clearErrors();
+                }
+                break;
+        }
+    });
+});
           }).call(void 0);
       </script>
                 
