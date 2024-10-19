@@ -28,6 +28,10 @@
      .error-highlight {
               border: 2px solid red; /* Highlight with a red border */
           }
+          .error-message {
+              color: red; /* Style for error messages */
+              font-size: 0.9em; /* Slightly smaller font for error messages */
+          }
     </style>
     </head>
     <body>
@@ -49,6 +53,7 @@
               <label for="biography">Biography</label>
               <textarea id="biography" name="biography" aria-describedby="biography_description"></textarea>
               <div id="biography_description" class="visually-hidden">Include examples of your skills in JavaScript.</div>
+              <div id="biography_error" class="error-message visually-hidden"></div> <!-- Error message container -->
           </div>
       
           <!-- Gender selection with fieldset and legend -->
@@ -112,11 +117,12 @@
                   $('input, textarea').removeClass('error-highlight'); // Remove highlight from all inputs
                   $('#errorContainer').addClass('visually-hidden'); // Hide error container
                   $('fieldset.errors').remove(); // Remove error fieldset
+                  $('#biography_error').addClass('visually-hidden'); // Hide biography error message
               }
       
               $(document).ready(function () {
                   // Validate inputs when the form is submitted
-                  $('#userForm').on('submit', function (event) {
+                  $('#userForm').on('submit', function ( event) {
                       event.preventDefault(); // Prevent form submission for validation
                       clearErrors(); // Clear previous errors
                       var isValid = true;
@@ -128,8 +134,9 @@
                       }
       
                       // Check biography input
-                      if ($('#biography').val().trim () === '') {
-                          validateInput('biography', 'Please tell us something about your history!');
+                      if ($('#biography').val().trim() === '') {
+                          $('#biography_error').text('Please tell us something about your history!').removeClass('visually-hidden');
+                          $('#biography').addClass('error-highlight');
                           isValid = false;
                       }
       
@@ -166,6 +173,7 @@
                           case 'biography':
                               if ($input.val().trim() !== '') {
                                   clearErrors();
+                                  $('#biography_error').addClass('visually-hidden');
                               }
                               break;
                           case 'gender':
