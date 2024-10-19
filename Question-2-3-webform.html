@@ -27,26 +27,22 @@
     </head>
     <body>
         <h1>Feedback form</h1>
-        <form>
+        <form id="userForm">
           <!-- Full name input with accessible label -->
           <div class="control">
-              <label for="full_name"> <!-- Changed ID to "full_name" for consistency -->
+              <label for="full_name">
                   Full Name
                   <span class="required">*</span>
               </label>
               <input id="full_name" name="name" type="text" required aria-required="true" aria-describedby="full_name_description">
-              <!-- Added aria-describedby to provide additional context -->
               <div id="full_name_description" class="visually-hidden">Please enter your full name.</div>
-              <!-- Added a description for screen readers -->
           </div>
       
           <!-- Biography input with accessible label -->
           <div class="control">
               <label for="biography">Biography</label>
               <textarea id="biography" name="biography" aria-describedby="biography_description"></textarea>
-              <!-- Added aria-describedby for context -->
               <div id="biography_description" class="visually-hidden">Include examples of your skills in JavaScript.</div>
-              <!-- Added a description for screen readers -->
           </div>
       
           <!-- Gender selection with fieldset and legend -->
@@ -58,7 +54,7 @@
               </div>
               <div class="control">
                   <input id="gender_female" name="gender" type="radio" value="female">
-                  <label for="gender_female">Female</label> <!-- Changed "for" attribute to match the correct ID -->
+                  <label for="gender_female">Female</label>
               </div>
           </fieldset>
       
@@ -72,9 +68,11 @@
           <div class="control">
               <input name="validate" type="hidden" value="1">
               <input type="submit" value="Register" aria-label="Register for the service">
-              <!-- Added aria-label for clarity -->
           </div>
       </form>
+      
+      <!-- Added error container for screen readers -->
+      <div id="errorContainer" class="visually-hidden" aria-live="assertive"></div>
       
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
       <script>
@@ -109,13 +107,13 @@
                           $referencedElement = $input;
                       }
       
-                      $error = $('<a>' + message + '</a>');
-                      $error.click(function (e) {
-                          $referencedElement.focus();
-                          return e.preventDefault();
-                      });
-                      $elementToDescribe.attr('aria-describedby', input + '_description');
-                      $errorContainer.append('<li>').find('li:last').append($error);
+                      // Changed to list item for better structure
+                      $error = $('<li>' + message + '</li>'); 
+                      $errorContainer.append($error);
+                      $referencedElement.attr('aria-invalid', 'true'); // Mark the input as invalid
+                      $referencedElement.focus(); // Focus on the first invalid input
+                      $('#errorContainer').text(message).removeClass('visually-hidden'); // Show error message in the error container
+                      $('#errorContainer').attr('aria-live', 'assertive'); // Notify screen readers of the error
                   } else {
                       if ($input.is(':checkbox')) {
                           $input.attr('checked', true);
@@ -130,14 +128,16 @@
               };
       
               $(document).ready(function () {
+                  // Validate inputs when the form is submitted
                   if ($.urlParam('validate')) {
                       validateInput('name', 'Please enter your name!');
                       validateInput('biography', 'Please tell us something about your history!');
                       validateInput('gender', 'Please tell us your gender!');
                       validateInput('accept_agbs', 'You must accept our terms and conditions!');
       
+                      // Show success alert only when all inputs are valid
                       if ($('.error').length === 0) {
-                          return alert('All inputs are valid.');
+                          alert('All inputs are valid.'); 
                       }
                   }
               });
