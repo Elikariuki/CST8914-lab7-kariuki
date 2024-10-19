@@ -69,9 +69,9 @@
                 <input id="gender_female" name="gender" type="radio" value="female">
                 <label for="gender_female">Female</label>
             </div>
-            <div id="gender_error" class="error-message visually-hidden"></div> 
+            <div id="gender_error" class="error-message visually-hidden" aria-live="assertive"></div> 
             <!-- Error message container for gender -->
-        </fieldset>
+          </fieldset>
       
           <!-- Terms and conditions checkbox -->
           <div class="control">
@@ -124,71 +124,72 @@
                   $('#biography_error').addClass('visually-hidden'); // Hide biography error message
               }
       
-              $(document).ready(function () {
-    // Validate inputs when the form is submitted
-    $('#userForm').on('submit', function (event) {
-        event.preventDefault(); // Prevent form submission for validation
-        clearErrors(); // Clear previous errors
-        var isValid = true;
-        var firstErrorField = null; // Variable to track the first error field
+                       $(document).ready(function () {
+                    // Validate inputs when the form is submitted
+                    $('#userForm').on('submit', function (event) {
+                        event.preventDefault(); // Prevent form submission for validation
+                        clearErrors(); // Clear previous errors
+                        var isValid = true;
+                        var firstErrorField = null; // Variable to track the first error field
 
-        // Check full name input
-        if ($('#full_name').val().trim() === '') {
-            validateInput('name', 'Please enter your name!');
-            isValid = false;
-            if (!firstErrorField) firstErrorField = $('#full_name'); // Set first error field
-        }
+                        // Check full name input
+                        if ($('#full_name').val().trim() === '') {
+                            validateInput('name', 'Please enter your name!');
+                            isValid = false;
+                            if (!firstErrorField) firstErrorField = $('#full_name'); // Set first error field
+                        }
 
-        // Check gender selection (required)
-        if (!$('input[name="gender"]').is(':checked')) {
-            // Highlight the gender radio buttons
-            $('input[name="gender"]').closest('.control').addClass('error-highlight'); // Highlight the fieldset
-            $('#gender_error').text('Please tell us your gender!').removeClass('visually-hidden'); // Show error message
-            isValid = false;
-            if (!firstErrorField) firstErrorField = $('input[name="gender"]').first(); // Set first error field
-        }
+                        // Check gender selection (required)
+                        if (!$('input[name="gender"]').is(':checked')) {
+                            // Highlight the gender radio buttons
+                            $('input[name="gender"]').closest('.control').addClass('error-highlight'); // Highlight the fieldset
+                            $('#gender_error').text('Please tell us your gender!').removeClass('visually-hidden'); // Show error message
+                            $('#gender_error').attr('aria-live', 'assertive'); // Set ARIA live region
+                            isValid = false;
+                            if (!firstErrorField) firstErrorField = $('input[name="gender"]').first(); // Set first error field
+                        }
 
-        // Check terms and conditions checkbox
-        if (!$('#accept_agbs').is(':checked')) {
-            $('#accept_agbs').addClass('terms-error-highlight'); // Highlight the checkbox
-            validateInput('accept_agbs', 'You must accept our terms and conditions!'); // Show error message
-            isValid = false;
-            if (!firstErrorField) firstErrorField = $('#accept_agbs'); // Set first error field
-        }
+                        // Check terms and conditions checkbox
+                        if (!$('#accept_agbs').is(':checked')) {
+                            $('#accept_agbs').addClass('terms-error-highlight'); // Highlight the checkbox
+                            validateInput('accept_agbs', 'You must accept our terms and conditions!'); // Show error message
+                            isValid = false;
+                            if (!firstErrorField) firstErrorField = $('#accept_agbs'); // Set first error field
+                        }
 
-        // Show success alert only when all inputs are valid
-        if (isValid) {
-            alert('All inputs are valid.'); 
-        } else if (firstErrorField) {
-            firstErrorField.focus(); // Move focus to the first error field
-        }
-    });
+                        // Show success alert only when all inputs are valid
+                        if (isValid) {
+                            alert('All inputs are valid.'); 
+                        } else if (firstErrorField) {
+                            firstErrorField.focus(); // Move focus to the first error field
+                        }
+                    });
 
-    // Clear errors when input values change
-    $('input, textarea').on('input', function () {
-        var $input = $(this);
-        var inputName = $input.attr('name');
+                    // Clear errors when input values change
+                    $('input, textarea').on('input', function () {
+                        var $input = $(this);
+                        var inputName = $input.attr('name');
 
-        // Check if the input is valid
-        switch (inputName) {
-            case 'name':
-                if ($input.val().trim() !== '') {
-                    clearErrors();
-                }
-                break;
-            case 'gender':
-                if ($('input[name="gender"]').is(':checked')) {
-                    clearErrors();
-                }
-                break;
-            case 'accept_agbs':
-                if ($input.is(':checked')) {
-                    clearErrors();
-                }
-                break;
-        }
-    });
-});
+                        // Check if the input is valid
+                        switch (inputName) {
+                            case 'name':
+                                if ($input.val().trim() !== '') {
+                                    clearErrors();
+                                }
+                                break;
+                            case 'gender':
+                                if ($('input[name="gender"]').is(':checked')) {
+                                    clearErrors();
+                                }
+                                break;
+                            case 'accept_agbs':
+                                if ($input.is(':checked')) {
+                                    clearErrors();
+                                }
+                                break;
+                        }
+                    });
+                });
           }).call(void 0);
       </script>
                 
