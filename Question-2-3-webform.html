@@ -28,6 +28,7 @@
     <body>
         <h1>Feedback form</h1>
     <form>
+      <!--addd correct label elements and required element to the full name-->>
         <div class="control">
           <label for="Full name">
             Full name
@@ -36,7 +37,10 @@
           <input id="Full name" name="name" type="text" required aria-required="true">
         </div>
         <div class="control">
-          <label>Biography</label><textarea id="biography" name="biography" type="text"></textarea>
+          <label for="biography">
+            Biography
+          </label>
+          <textarea id="biography" name="biography" type="text"></textarea>
           <span>Include examples on your skills in JavaScript.</span>
         </div>
         <!--Associated related radio buttons with fieldset-->
